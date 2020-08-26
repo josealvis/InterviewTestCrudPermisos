@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <h1 class="display-4">Fluid jumbotron</h1>
+    <h1 class="display-4">{{requestId == 0 ? "Add new time off": "Update the current time off" }}</h1>
     <form @submit="checkForm">
       <div class="alert alert-danger" role="alert" v-if="errors.length">
         <b>Please correct the following error(s):</b>
@@ -18,7 +18,7 @@
           name="employeeFirstName"
           class="form-control"
         />
-        <small id="name" class="form-text text-muted">We'll never share your email with anyone else.</small>
+
       </div>
 
       <div class="form-group">
@@ -30,7 +30,7 @@
           name="employeeLastName"
           class="form-control"
         />
-        <small id="name" class="form-text text-muted">We'll never share your email with anyone else.</small>
+
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -47,25 +47,22 @@
       <div>
         <label for="example-datepicker">Choose a date</label>
         <b-form-datepicker id="example-datepicker" v-model="requestDate" class="mb-2"></b-form-datepicker>
-        <p>Value: '{{ requestDate }}'</p>
       </div>
-
-      <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-      </div>
-      <button type="button" class="btn btn-primary" v-on:click="checkForm">Submit</button>
+      <button type="button" class="btn btn-primary" v-on:click="checkForm">{{requestId == 0 ? "Save": "Update"}}</button>
+      <button type="button" class="btn btn-info" v-on:click="goBack">Go back</button>
     </form>
-    {{selectedType}}
   </div>
 </template>
 
 <script>
 import axios from "axios";
+
+
 export default {
   name: "Home",
   data() {
     return {
+      requestId : 0,
       timeOffTypes: [],
       errors: [],
       firstName: null,
@@ -78,6 +75,9 @@ export default {
   },
 
   methods: {
+    goBack: function(){
+      this.$router.go(-1);
+    },
     checkForm: function (e) {
       if (
         this.firstName &&
@@ -107,18 +107,17 @@ export default {
     },
     saveChanges: function () {
       console.log("ok");
-
       axios({
         method: "post",
         url: "https://localhost:44399/TimeOffReques/Post/",
         data: {
-          "Id": 0,
-          "EmployeeName": this.firstName,
-          "EmployeeLastname": this.lastName,
-          "Type": { id: this.selectedType },
-          "RequestDate": this.requestDate,
+          Id: this.requestId,
+          EmployeeName: this.firstName,
+          EmployeeLastname: this.lastName,
+          Type: { id: this.selectedType },
+          RequestDate: this.requestDate,
         },
-        headers: {  'Content-Type': 'application/json'},
+        headers: { "Content-Type": "application/json" },
       })
         .then(function (response) {
           //handle success
@@ -133,17 +132,34 @@ export default {
 
   // Fetches posts when the component is created.
   created() {
+    console.log(this.$route.params.id);
 
-console.log(this.$route.params);
+        axios
+        .get(`https://localhost:44399/TimeOffType/GetAll/`)
+        .then((response) => {
+          this.timeOffTypes = response.data;
+        })
+        .catch((e) => {
+          this.errors.push(e);
+        });
 
-    axios
-      .get(`https://localhost:44399/TimeOffType/GetAll/`)
-      .then((response) => {
-        this.timeOffTypes = response.data;
-      })
-      .catch((e) => {
-        this.errors.push(e);
-      });
+    if (this.$route.params.id !== undefined) {
+      axios
+        .get(`https://localhost:44399/TimeOffReques/GetbyId/`+this.$route.params.id)
+        .then((response) => {
+          let request = response.data;
+          this.requestId = request.id,
+          this.firstName = request.employeeName;
+          this.lastName =request.employeeLastname;
+          this.selectedType  = request.type.id;
+          this.requestDate = request.requestDate;
+
+        })
+        .catch((e) => {
+          this.errors.push(e);
+        });
+    } 
+    
   },
 };
 </script>

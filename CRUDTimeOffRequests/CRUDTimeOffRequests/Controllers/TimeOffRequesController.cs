@@ -27,7 +27,10 @@ namespace CRUDTimeOffRequests.Controllers
         public IEnumerable<TimeOffRequestVM> GetAll() => _timeOffRequestService.GetAll().Data;
 
         [HttpGet]
-        public IEnumerable<TimeOffRequestVM> Get(int id) => _timeOffRequestService.GetById(id).Data;
+        public TimeOffRequestVM GetById(int id) => _timeOffRequestService.GetById(id).Data;
+
+        [HttpGet]
+        public void  Delete(int id) => _timeOffRequestService.Delete(id);
 
         [HttpPost]
         public void Post([FromBody]TimeOffRequestVM data) => _timeOffRequestService.Update(data);

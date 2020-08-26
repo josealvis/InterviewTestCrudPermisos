@@ -33,7 +33,7 @@ namespace ApplicationServices.Services
             return result;
         }
 
-        public ServiceResult Delete(TimeOffTypeVM model)
+        public ServiceResult Delete(int Id)
         {
             throw new NotImplementedException();
         }

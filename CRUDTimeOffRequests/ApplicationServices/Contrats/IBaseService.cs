@@ -11,7 +11,7 @@ namespace ApplicationServices.Contrats
 
         ServiceResult GetById(int Id);
         ServiceResult Create(TModel model);
-        ServiceResult Delete(TModel model);
+        ServiceResult Delete(int Id);
         ServiceResult Find(TModel model);
         ServiceResult Update(TModel model);
     }

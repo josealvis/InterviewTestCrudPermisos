@@ -22,7 +22,7 @@ import Edit from './components/Edit.vue'
 
 const routes = [
   { path: '/requestList', component: Home },
-  { path: '/edit:id', component: Edit },
+  { path: '/edit:id', name:'edit', component: Edit },
   { path: '/edit', component: Edit }
 ]
 

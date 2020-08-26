@@ -9,6 +9,8 @@ namespace Repository.Contrats
         TModel GetById(int modelId);
         void Save(TModel model);
         void Remove(int modelId);
+
+        void Update(TModel model);
         List<TModel> GetAll();
     }
 }

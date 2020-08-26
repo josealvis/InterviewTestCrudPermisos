@@ -43,5 +43,10 @@ namespace Repository.Repositories
             unitOfWork.Repository<TimeOffTypesEntity>().Add(model);
             unitOfWork.Commit();
         }
+
+        public void Update(TimeOffTypesEntity model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -44,5 +44,17 @@ namespace Repository.Repositories
             unitOfWork.Repository<TimeOffRequestsEntity>().Add(model);
             unitOfWork.Commit();
         }
+
+        public void Update(TimeOffRequestsEntity model)
+        {
+            var entity = GetById(model.TimeOffRequestId);
+            entity.EmployeeName = model.EmployeeName;
+            entity.EmployeeLastname = model.EmployeeLastname;
+            entity.RequestDate = model.RequestDate;
+            entity.TimeOffTypeId = model.TimeOffTypeId;
+
+            unitOfWork.Repository<TimeOffRequestsEntity>().Update(entity);
+            unitOfWork.Commit();
+        }
     }
 }

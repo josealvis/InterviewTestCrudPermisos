@@ -26,9 +26,21 @@ namespace ApplicationServices.Services
             throw new NotImplementedException();
         }
 
-        public ServiceResult Delete(TimeOffRequestVM model)
+        public ServiceResult Delete(int Id)
         {
-            throw new NotImplementedException();
+            ServiceResult result = new ServiceResult();
+
+            try
+            {
+              _timeOffRequestRepo.Remove(Id);
+
+            }
+            catch (Exception ex)
+            {
+                result.addError(ex);
+            }
+
+            return result;
         }
 
         public ServiceResult Find(TimeOffRequestVM model)
@@ -61,7 +73,20 @@ namespace ApplicationServices.Services
 
         public ServiceResult GetById(int Id)
         {
-            throw new NotImplementedException();
+            ServiceResult result = new ServiceResult();
+
+            try
+            {
+                var results = _timeOffRequestRepo.GetById(Id);
+                results.TimeOffType = _timeOffTypeRepo.GetById(results.TimeOffTypeId);
+                result.Data = results.ConvertToViewModel();
+            }
+            catch (Exception ex)
+            {
+                result.addError(ex);
+            }
+
+            return result;
         }
 
         public ServiceResult Update(TimeOffRequestVM model)
@@ -70,7 +95,13 @@ namespace ApplicationServices.Services
 
             try
             {
-                _timeOffRequestRepo.Save(model.ConvertToEntity());
+                if (model.Id == 0)
+                {
+                    _timeOffRequestRepo.Save(model.ConvertToEntity());
+                }
+                else {
+                    _timeOffRequestRepo.Update(model.ConvertToEntity());
+                }
             }
             catch (Exception ex)
             {
