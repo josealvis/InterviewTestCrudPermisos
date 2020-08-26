@@ -1,4 +1,8 @@
 // vue.config.js
 module.exports = {
-    outputDir: '../wwwroot/'
+  runtimeCompiler: true,
+    outputDir: '../wwwroot/',
+    devServer: {
+      proxy: 'https://localhost:44399'
+    }
   }

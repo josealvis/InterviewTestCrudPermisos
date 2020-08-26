@@ -66,7 +66,18 @@ namespace ApplicationServices.Services
 
         public ServiceResult Update(TimeOffRequestVM model)
         {
-            throw new NotImplementedException();
+            ServiceResult result = new ServiceResult();
+
+            try
+            {
+                _timeOffRequestRepo.Save(model.ConvertToEntity());
+            }
+            catch (Exception ex)
+            {
+                result.addError(ex);
+            }
+
+            return result;
         }
     }
 }

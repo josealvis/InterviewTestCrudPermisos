@@ -10,6 +10,6 @@ namespace Domain.Core
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreationDate { get; set; }
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
     }
 }

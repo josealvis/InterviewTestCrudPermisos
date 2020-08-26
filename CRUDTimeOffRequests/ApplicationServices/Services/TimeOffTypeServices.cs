@@ -49,7 +49,7 @@ namespace ApplicationServices.Services
 
             try
             {
-                result.Data =  _timeOffTypesRepo.GetAll();
+                result.Data =  _timeOffTypesRepo.GetAll().ConvertToViewModel();
             }
             catch (Exception ex)
             {

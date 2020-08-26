@@ -19,8 +19,6 @@ namespace Context.Core
                 .HasOne(s => s.TimeOffType);
         }
 
-    
-
         public DbSet<TEntity> CreateSet<TEntity>() where TEntity : class
         {
             return base.Set<TEntity>();

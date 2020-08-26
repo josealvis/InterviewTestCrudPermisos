@@ -23,6 +23,8 @@ namespace CRUDTimeOffRequests
 {
     public class Startup
     {
+
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,6 +35,16 @@ namespace CRUDTimeOffRequests
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("http://192.168.29.187:8080");
+                    });
+            });
+
             services.AddControllers();
             //creates and configures the context
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -64,11 +76,15 @@ namespace CRUDTimeOffRequests
 
             app.UseRouting();
 
+            app.UseCors();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
