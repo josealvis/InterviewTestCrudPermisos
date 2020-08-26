@@ -16,8 +16,7 @@ namespace Domain.Entities
         public string EmployeeLastname { get; set; }
         public string TimeOffTypeId { get; set; }
 
-        [ForeignKey("TimeOffTypeId")]
-        public TimeOffTypesEntity TimeOffType { get; set; }
+        public virtual  TimeOffTypesEntity TimeOffType { get; set; }
         public DateTime RequestDate { get; set; }
     }
 }
