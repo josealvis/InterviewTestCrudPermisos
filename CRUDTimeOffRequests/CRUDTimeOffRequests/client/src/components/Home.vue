@@ -1,12 +1,11 @@
 <template>
   <div class="container-fluid">
-    <div class="container">
+
       <h1 class="display-4">Time Off Request</h1>
-    </div>
+
     <div class="row">
-      <div class="col-sm"></div>
-      <div class="col-sm"></div>
-      <div class="col-sm">
+      <div class="col-10"></div>
+      <div class="col-2">
         <button class="btn btn-primary" type="submit" v-on:click="addRequest" >Add Time off request</button>
       </div>
     </div>
@@ -30,11 +29,17 @@
           <td>{{ new Date(timeOff.requestDate) | dateFormat('YYYY/MM/DD')}}</td>
           <td>
             <b-button pill variant="outline-secondary" v-on:click="editRequest(timeOff.id)">Edit</b-button>
-            <b-button pill variant="outline-danger" v-on:click="removeRequest(timeOff.id)">Remove</b-button>
+            <b-button pill variant="outline-danger" v-on:click="showModal(timeOff.id)">Remove</b-button>
           </td>
         </tr>
       </tbody>
     </table>
+    <b-modal
+      id="modal-prevent-closing"
+      ref="delete-alert"
+      title="Deleting Request"
+      @ok="handleOk"
+    >Are you sure?</b-modal>
   </div>
 </template>
 
@@ -45,12 +50,19 @@ export default {
   data() {
     return {
       timeOffRequestList: [],
+      selectedId: null,
       errors: [],
     };
   },
-  methods: {
+  methods: { 
+      showModal(id) {
+        this.selectedId = id;
+        this.$refs['delete-alert'].show();
+      },
+      handleOk: function(){
+        this.removeRequest(this.selectedId)
+      },
     removeRequest: function (id) {
-      console.log(id);
       axios
         .get(`https://localhost:44399/TimeOffReques/Delete/` + id)
         .then((response) => {

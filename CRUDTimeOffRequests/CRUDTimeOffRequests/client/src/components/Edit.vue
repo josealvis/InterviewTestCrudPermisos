@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <h1 class="display-4">{{requestId == 0 ? "Add new time off": "Update the current time off" }}</h1>
     <form @submit="checkForm">
       <div class="alert alert-danger" role="alert" v-if="errors.length">
@@ -10,7 +10,7 @@
       </div>
 
       <div class="form-group">
-        <label for="name">Employee Name</label>
+        <label for="name" >Employee Name</label>
         <input
           id="employeeFirstName"
           v-model="firstName"
@@ -50,6 +50,13 @@
       </div>
       <button type="button" class="btn btn-primary" v-on:click="checkForm">{{requestId == 0 ? "Save": "Update"}}</button>
       <button type="button" class="btn btn-info" v-on:click="goBack">Go back</button>
+        
+        <b-modal
+      id="modal-prevent-closing"
+      ref="apply-alert"
+      title="Warning"
+      @ok="handleOk"
+    >By Clicking Ok changes will be applyed.</b-modal>
     </form>
   </div>
 </template>
@@ -78,6 +85,12 @@ export default {
     goBack: function(){
       this.$router.go(-1);
     },
+     showModal() {
+        this.$refs['apply-alert'].show();
+      },
+      handleOk: function(){
+          this.saveChanges();
+      },
     checkForm: function (e) {
       if (
         this.firstName &&
@@ -85,7 +98,8 @@ export default {
         this.selectedType &&
         this.requestDate
       ) {
-        this.saveChanges();
+        this.errors = [];
+        this.showModal();
       } else {
         this.errors = [];
 
@@ -122,6 +136,7 @@ export default {
         .then(function (response) {
           //handle success
           console.log(response);
+          this.goBack();
         })
         .catch(function (response) {
           //handle error
