@@ -1,4 +1,5 @@
 ﻿using Context.Contrats;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,15 @@ namespace Context.Core
         public DbContextBase(DbContextOptions options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TimeOffRequestsEntity>()
+                .HasOne(s => s.TimeOffType);
+        }
+
+    
+
         public DbSet<TEntity> CreateSet<TEntity>() where TEntity : class
         {
             return base.Set<TEntity>();

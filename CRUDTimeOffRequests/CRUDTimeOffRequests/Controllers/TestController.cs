@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationServices.Contrats;
+using ApplicationServices.ViewModel;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,15 +19,17 @@ namespace CRUDTimeOffRequests.Controllers
 
 
         private readonly ILogger<TestController> _logger;
-        private IRepository<TimeOffTypesEntity> _timeOffTypesRepo;
+        private IBaseService<TimeOffTypeVM> _timeOffTypesService;
+        private IBaseService<TimeOffRequestVM> _timeOffRequestService;
 
-        public TestController(ILogger<TestController> logger, IRepository<TimeOffTypesEntity> timeOffTypesRepo)
+        public TestController(ILogger<TestController> logger, IBaseService<TimeOffTypeVM> timeOffTypesService, IBaseService<TimeOffRequestVM> timeOffRequestService)
         {
             _logger = logger;
-            _timeOffTypesRepo = timeOffTypesRepo;
+            _timeOffTypesService = timeOffTypesService;
+            _timeOffRequestService = timeOffRequestService;
         }
 
         [HttpGet]
-        public IEnumerable<TimeOffTypesEntity> Get() => _timeOffTypesRepo.GetAll();
+        public IEnumerable<TimeOffRequestVM> Get() => _timeOffRequestService.GetAll().Data;
     }
 }

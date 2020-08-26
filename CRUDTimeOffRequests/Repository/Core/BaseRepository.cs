@@ -27,6 +27,12 @@ namespace Repository.Core
             return Entity.Where(predicate);
         }
 
+        public virtual BaseRepository<TEntity>  Include(Expression<Func<TEntity, bool>> predicate = null)
+        {
+            Entity.Include(predicate);
+            return this;
+        }
+
         public virtual void Add(TEntity item)
         {
             Entity.Add(item);
