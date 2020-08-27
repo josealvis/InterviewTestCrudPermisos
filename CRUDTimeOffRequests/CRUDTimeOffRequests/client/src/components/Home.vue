@@ -83,6 +83,7 @@ export default {
         .get(`https://localhost:44399/TimeOffReques/Delete/` + id)
         .then((response) => {
           console.log(response);
+          alert("Registro Eliminado");
           this.loadRequest();
         })
         .catch((e) => {
