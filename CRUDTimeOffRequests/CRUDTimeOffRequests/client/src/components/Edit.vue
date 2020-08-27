@@ -120,7 +120,6 @@ export default {
       }
     },
     saveChanges: function () {
-      console.log("ok");
       axios({
         method: "post",
         url: "https://localhost:44399/TimeOffReques/Post/",
@@ -145,10 +144,8 @@ export default {
     },
   },
 
-  // Fetches posts when the component is created.
   created() {
-    console.log(this.$route.params.id);
-
+        let id = this.$route.params.id;
         axios
         .get(`https://localhost:44399/TimeOffType/GetAll/`)
         .then((response) => {
@@ -158,9 +155,9 @@ export default {
           this.errors.push(e);
         });
 
-    if (this.$route.params.id !== undefined) {
+    if (id !== undefined) {
       axios
-        .get(`https://localhost:44399/TimeOffReques/GetbyId/`+this.$route.params.id)
+        .get(`https://localhost:44399/TimeOffReques/GetbyId/`+id)
         .then((response) => {
           let request = response.data;
           this.requestId = request.id,
@@ -171,7 +168,7 @@ export default {
 
         })
         .catch((e) => {
-          this.errors.push(e);
+          this.errors.push( e);
         });
     } 
     
