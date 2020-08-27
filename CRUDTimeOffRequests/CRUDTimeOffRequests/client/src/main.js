@@ -21,6 +21,10 @@ import Home from './components/Home.vue'
 import Edit from './components/Edit.vue' 
 
 const routes = [
+  {
+    path: '/',
+    redirect: '/requestList'
+  },
   { path: '/requestList', component: Home },
   { path: '/edit:id', name:'edit', component: Edit },
   { path: '/edit', component: Edit }

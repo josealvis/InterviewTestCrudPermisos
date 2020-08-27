@@ -1,12 +1,11 @@
 <template>
   <div class="container-fluid">
-
-      <h1 class="display-4">Time Off Request</h1>
+    <h1 class="display-4">Time Off Request</h1>
 
     <div class="row">
       <div class="col-10"></div>
       <div class="col-2">
-        <button class="btn btn-primary" type="submit" v-on:click="addRequest" >Add Time off request</button>
+        <button class="btn btn-primary" type="submit" v-on:click="addRequest">Add Time off request</button>
       </div>
     </div>
     <table class="table">
@@ -21,8 +20,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(timeOff, index) in timeOffRequestList" :key="timeOff.Id">
-          <th scope="row">{{index+1}}</th>
+        <tr v-for="(timeOff) in paginatedList" :key="timeOff.Id">
+          <th scope="row">{{timeOff.id}}</th>
           <td>{{timeOff.employeeName}}</td>
           <td>{{timeOff.employeeLastname}}</td>
           <td>{{timeOff.type.name}}</td>
@@ -34,6 +33,21 @@
         </tr>
       </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" v-bind:class="{ disabled: page === 0 }">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"  v-on:click="paginationHandler(page-1)" >Previous</a>
+        </li>
+
+        <li class="page-item">
+          <a class="page-link" href="#">{{page+1}}</a>
+        </li>
+
+        <li class="page-item" v-bind:class="{ disabled: (page* 5)+5 >= timeOffRequestList.length }">
+          <a class="page-link" href="#"    v-on:click="paginationHandler(page+1)" >Next</a>
+        </li>
+      </ul>
+    </nav>
     <b-modal
       id="modal-prevent-closing"
       ref="delete-alert"
@@ -50,18 +64,20 @@ export default {
   data() {
     return {
       timeOffRequestList: [],
+      paginatedList: [],
+      page: 0,
       selectedId: null,
       errors: [],
     };
   },
-  methods: { 
-      showModal(id) {
-        this.selectedId = id;
-        this.$refs['delete-alert'].show();
-      },
-      handleOk: function(){
-        this.removeRequest(this.selectedId)
-      },
+  methods: {
+    showModal(id) {
+      this.selectedId = id;
+      this.$refs["delete-alert"].show();
+    },
+    handleOk: function () {
+      this.removeRequest(this.selectedId);
+    },
     removeRequest: function (id) {
       axios
         .get(`https://localhost:44399/TimeOffReques/Delete/` + id)
@@ -74,10 +90,10 @@ export default {
         });
     },
     editRequest: function (id) {
-         this.$router.push({ path: 'edit'+id })
+      this.$router.push({ path: "edit" + id });
     },
     addRequest: function () {
-         this.$router.push({ path: 'edit' })
+      this.$router.push({ path: "edit" });
     },
     loadRequest: function () {
       axios
@@ -85,16 +101,21 @@ export default {
         .then((response) => {
           // JSON responses are automatically parsed.
           this.timeOffRequestList = response.data;
+          this.paginationHandler(0);
         })
         .catch((e) => {
           this.errors.push(e);
         });
     },
+    paginationHandler: function (page) {
+      this.page = page;
+      this.paginatedList = [...this.timeOffRequestList].slice(page* 5, (page* 5)+5);
+    },
   },
 
   // Fetches posts when the component is created.
   created() {
-      this.loadRequest();
+    this.loadRequest();
   },
 };
 </script>
